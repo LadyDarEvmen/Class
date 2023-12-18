@@ -1,0 +1,70 @@
+import random
+
+class Question:
+    def __init__(self, question, answers):
+        self.question = question
+        self.answers = answers
+
+    def get_random_choices(self):
+        random.shuffle(self.answers)
+        return self.answers
+
+class Quiz:
+    def __init__(self, questions, complexity=1):
+        self.questions = questions
+        self.complexity = complexity
+
+    def run(self):
+        random.shuffle(self.questions)
+
+        for question in self.questions:
+            choices = question.get_random_choices()
+
+            print(question.question)
+            for i, choice in enumerate(choices):
+                print(f"{i + 1}. {choice['text']}")
+            
+            user_answer = input("Your answer (enter the numbers separated by commas, or press 's' to skip): ")
+            
+            if user_answer.lower() == 's':
+                print("Question skipped.\n")
+                continue
+            
+            user_answer_indices = [int(idx.strip()) - 1 for idx in user_answer.split(",")]
+            user_values = [choices[idx]['value'] for idx in user_answer_indices]
+
+            if 0 in user_values:
+                print("Question skipped.\n")
+            elif all(value > 0 for value in user_values):
+                print("Correct!\n")
+            else:
+                print("Wrong!\n")
+
+# Создаем экземпляры вопросов
+question1 = Question("What is the capital of France?", [
+    {'text': 'Paris', 'value': 3},
+    {'text': 'London', 'value': -3},
+    {'text': 'Berlin', 'value': -3},
+    {'text': 'Rome', 'value': -3}
+])
+
+question2 = Question("Who painted the Mona Lisa?", [
+    {'text': 'Leonardo da Vinci', 'value': 3},
+    {'text': 'Pablo Picasso', 'value': -3},
+    {'text': 'Vincent van Gogh', 'value': -3},
+    {'text': 'Michelangelo', 'value': -3}
+])
+
+question3 = Question("What is the largest planet in our solar system?", [
+    {'text': 'Jupiter', 'value': 3},
+    {'text': 'Saturn', 'value': -3},
+    {'text': 'Neptune', 'value': -3},
+    {'text': 'Mars', 'value': -3}
+])
+# Добавьте свои вопросы и ответы здесь
+
+# Создаем экземпляр викторины и передаем список вопросов
+quiz = Quiz([question1, question2, question3])
+
+# Запускаем викторину
+quiz.run()
